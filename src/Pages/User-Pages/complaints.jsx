@@ -1,10 +1,68 @@
 import jailImage from "../../Images/jail-with-hands.jpg"
 import NavBar from "../../Components/User-Components/navbar"
-import { Link } from "react-router-dom";
+import { registerComplaint } from "../../services/User-Services/complaint";
+import { Link, useNavigate} from "react-router-dom";
 import Footer from "../../Components/User-Components/footer";
 import Form from 'react-bootstrap/Form';
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 function Complaints() {
+
+    const[title,setTitle]=useState('');
+    const[complaintType,setComplaintType]=useState('');
+    const[complaintDescription,setComplaintDescription]=useState('');
+    const[crimeDate,setCrimeDate]=useState('');
+    const[suspectName,setSuspectName]=useState('');
+    const[suspectAddress,setSuspectAddress]=useState('');
+    const[imageProof,setImageProof]=useState('');
+    const navigate = useNavigate()
+
+    const onComplaintForm = async () => {
+ 
+        if(title.length===0){
+           toast.warning('Enter title')
+        }
+        else if(complaintType.length===0 || complaintType===0){
+          toast.warning("Choose complaint Type")
+        }
+        else if(complaintDescription.length===0){
+            toast.warning("Enter Complaint Description")
+        }
+        else if(crimeDate.length===0){
+            toast.warning("Enter Crime Date")
+        }
+        else if(suspectName.length===0){
+            toast.warning("Enter Suspect Name")
+        }
+        else if(suspectAddress.length===0){
+            toast.warning("Enter Suspect Address")
+        }
+        
+        else{
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('complaintType', complaintType);
+            formData.append('complaintDescription', complaintDescription);
+            formData.append('crimeDate', crimeDate);
+            formData.append('suspectName', suspectName);
+            formData.append('suspectAddress', suspectAddress);
+            if (imageProof) {
+                formData.append('imageProof', imageProof);
+            }
+
+            const result = await registerComplaint(formData)
+      if (result['status'] === 'success') {
+        toast.success('Successfully Registered a Complaint')
+        navigate('/complaints')
+      } else {
+        toast.error('Failed to register the user')
+      }
+          
+          
+        }
+    }
     return (
         <>
             <NavBar />
@@ -44,7 +102,7 @@ function Complaints() {
                                             </td>
                                             <td >
                                                 <div className="col form-floating">
-                                                    <input type="text" className="form-control" id="ComplaintTitle" placeholder="Title of Complaint" />
+                                                    <input onChange={(e) => setTitle(e.target.value)} type="text" className="form-control" id="ComplaintTitle" placeholder="Title of Complaint" />
                                                     <label htmlFor="ComplaintTitle">Title of Complaint</label>
                                                 </div>
                                             </td>
@@ -55,8 +113,8 @@ function Complaints() {
                                                 <h6 className="text-light">Complaint Type</h6>
                                             </td>
                                             <td >
-                                                <Form.Select >
-                                                    <option>Select</option>
+                                                <Form.Select value={complaintType} onChange={(e) => setComplaintType(e.target.value)}>
+                                                <option value="0">Choose from below menu</option>
                                                     <option value="1">Accidents</option>
                                                     <option value="2">Assault</option>
                                                     <option value="3">Credit card fraud</option>
@@ -81,7 +139,7 @@ function Complaints() {
                                                 <h6 className="text-light">Complaint Description</h6>
                                             </td>
                                             <td >
-                                                <textarea className="form-control" id="ComplaintsDescription" rows="2"></textarea>
+                                                <textarea onChange={(e) => setComplaintDescription(e.target.value)} className="form-control" id="ComplaintsDescription" rows="2"></textarea>
                                             </td>
                                         </tr>
 
@@ -90,7 +148,7 @@ function Complaints() {
                                                 <h6 className="text-light">Crime Date</h6>
                                             </td>
                                             <td >
-                                                <input className="col" type="date" ></input>
+                                                <input onChange={(e) => setCrimeDate(e.target.value)} className="col" type="date" ></input>
                                             </td>
                                         </tr>
 
@@ -100,7 +158,7 @@ function Complaints() {
                                             </td>
                                             <td >
                                                 <div className="col form-floating">
-                                                    <input type="text" className="form-control" id="SuspectName" placeholder="SuspectName" />
+                                                    <input onChange={(e) => setSuspectName(e.target.value)} type="text" className="form-control" id="SuspectName" placeholder="SuspectName" />
                                                     <label htmlFor="ComplaintTitle">Suspect Name</label>
                                                 </div>
                                             </td>
@@ -112,7 +170,7 @@ function Complaints() {
                                             </td>
                                             <td >
                                                 <div className="col form-floating">
-                                                    <input type="text" className="form-control" id="SuspectAddress" placeholder="SuspectAddress" />
+                                                    <input onChange={(e) => setSuspectAddress(e.target.value)} type="text" className="form-control" id="SuspectAddress" placeholder="SuspectAddress" />
                                                     <label htmlFor="ComplaintTitle">Suspect Address</label>
                                                 </div>
                                             </td>
@@ -121,7 +179,16 @@ function Complaints() {
                                         <tr>
                                             <td><h6 className="text-light">Image Proof (if any) </h6></td>
                                             <td><Form.Group controlId="formFile">
-                                                <Form.Control type="file" />
+                                            <Form.Control 
+                                type="file" 
+                                onChange={(event) => {
+                                    if (event.target.files.length > 0) {
+                                        setImageProof(event.target.files[0].name);
+                                    } else {
+                                        setImageProof('');
+                                    }
+                                }} 
+                            />
                                             </Form.Group>
                                             </td>
                                         </tr>
@@ -145,7 +212,7 @@ function Complaints() {
                 <div className="col-md-4"></div>
                 <div className="col-md-4">
                 <div className="col-12 mb-5">
-                <button className="btn btn-primary" type="submit">Register Complaint</button>
+                <button onClick={onComplaintForm} className="btn btn-primary" type="submit">Register Complaint</button>
                 </div>
                 </div>
                 <div className="col-md-4"></div>

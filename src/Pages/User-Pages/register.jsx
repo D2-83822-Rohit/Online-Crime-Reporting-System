@@ -1,14 +1,19 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { register } from '../../services/user'
+import { register } from '../../services/User-Services/user'
 import { toast } from 'react-toastify'
 
 function RegisterUser() {
   // create state members
-  const [firstName, setFirstName] = useState('')
-  // const [lastName, setLastName] = useState('')
+  const [name, setName] = useState('')
+  const [adharCardNumber, setAdharCardNumber] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [addressLine1, setAddressLine1] = useState('')
+  const [addressLine2, setAddressLine2] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [pincode, setPincode] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
@@ -28,25 +33,35 @@ function RegisterUser() {
     console.log('onRegister')
 
     // client side validation
-    if (firstName.length === 0) {
-      toast.warning('enter first name')
-    // } else if (lastName.length === 0) {
-      // toast.warning('enter last name')
+    if (name.length === 0) {
+      toast.warning('Enter Name')
+    } else if (adharCardNumber.length !== 12 ) {
+      toast.warning('Enter Adhar Card Number')
     } else if (email.length === 0) {
-      toast.warning('enter email')
-    } else if (!isValidEmail()) {
+      toast.warning('Enter Email')
+    }else if (addressLine1.length === 0) {
+      toast.warning('Enter Address Line 1')
+    }else if (addressLine2.length === 0) {
+      toast.warning('Enter Address Line 2')
+    }else if (state.length === 0) {
+      toast.warning('Enter State')
+    }else if (city.length === 0) {
+      toast.warning('Enter City')
+    }else if (pincode.length === 0) {
+      toast.warning('Enter Pincode')
+    }else if (!isValidEmail()) {
       toast.warning('Email is not valid')
     } else if (password.length === 0) {
-      toast.warning('enter password')
+      toast.warning('Enter Password')
     } else if (confirmPassword.length === 0) {
-      toast.warning('confirm password')
+      toast.warning('Confirm Password')
     } else if (password !== confirmPassword) {
-      toast.warning('password does not match')
+      toast.warning('Password Does Not Match')
     } else {
       // make the API call and receive the result
-      const result = await register(firstName, email, phone, password)
+      const result = await register(name,adharCardNumber, email, phone, addressLine1, addressLine2 ,state, city, pincode, password)
       if (result['status'] === 'success') {
-        toast.success('successfully registered a user')
+        toast.success('Successfully Registered a User')
         navigate('/login')
       } else {
         toast.error('Failed to register the user')
@@ -74,7 +89,7 @@ function RegisterUser() {
                 <label htmlFor=''>Name</label>
                 <input
                   onChange={(e) => {
-                    setFirstName(e.target.value)
+                    setName(e.target.value)
                   }}
                   type='text'
                   className='form-control'
@@ -85,9 +100,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor=''>Adhar Card Number</label>
                 <input
-                  // onChange={(e) => {
-                  //   setConfirmPassword(e.target.value)
-                  // }}
+                   onChange={(e) => {
+                    setAdharCardNumber(e.target.value)
+                   }}
                   type='number'
                   className='form-control'
                 />
@@ -129,9 +144,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor=''>Address Line 1</label>
                 <input
-                  // onChange={(e) => {
-                  //   setFirstName(e.target.value)
-                  // }}
+                  onChange={(e) => {
+                    setAddressLine1(e.target.value)
+                  }}
                   type='text'
                   className='form-control'
                 />
@@ -141,9 +156,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor=''>Address Line 2</label>
                 <input
-                  // onChange={(e) => {
-                  //   setConfirmPassword(e.target.value)
-                  // }}
+                  onChange={(e) => {
+                    setAddressLine2(e.target.value)
+                  }}
                   type='text'
                   className='form-control'
                 />
@@ -157,9 +172,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor=''>State</label>
                 <input
-                  // onChange={(e) => {
-                  //   setFirstName(e.target.value)
-                  // }}
+                  onChange={(e) => {
+                    setState(e.target.value)
+                  }}
                   type='text'
                   className='form-control'
                 />
@@ -169,9 +184,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor='City'>City</label>
                 <input
-                  // onChange={(e) => {
-                  //   setConfirmPassword(e.target.value)
-                  // }}
+                  onChange={(e) => {
+                    setCity(e.target.value)
+                  }}
                   type='text'
                   className='form-control'
                 />
@@ -181,9 +196,9 @@ function RegisterUser() {
               <div className='mb-3'>
                 <label htmlFor='Pin Code'>Pin code</label>
                 <input
-                  // onChange={(e) => {
-                  //   setConfirmPassword(e.target.value)
-                  // }}
+                  onChange={(e) => {
+                    setPincode(e.target.value)
+                  }}
                   type='text'
                   className='form-control'
                 />

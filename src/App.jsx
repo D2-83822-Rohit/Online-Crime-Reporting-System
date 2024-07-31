@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Complaints from './Pages/User-Pages/complaints';
 import Status from './Pages/User-Pages/status';
 import History from './Pages/User-Pages/history';
+import UpdateComplaint from './Pages/User-Pages/update'
 import Contact from './Pages/User-Pages/contact';
 import ComplaintDetails from './Components/complaint_details';
 import MainNavBar from './Components/main_navbar';
@@ -21,6 +22,7 @@ import PoliceHome from './Pages/Police-Pages/police_home';
 import PoliceComplaints from './Pages/Police-Pages/police_complaints';
 import PoliceOfficers from './Pages/Police-Pages/police_officers';
 import PoliceInquires from './Pages/Police-Pages/police_inquires';
+import ComplaintDetailsUser from './Pages/User-Pages/complaint_details';
 
 function App() {
   return (
@@ -33,8 +35,10 @@ function App() {
     <Route path='/complaints' element={<Complaints />} />
     <Route path='/status' element={<Status />} />
     <Route path='/history' element={<History />} />
+    <Route path="/updateComplaint/:complaintId" element={<UpdateComplaint />} />
     <Route path='/contact' element={<Contact />} />
     <Route path='/view' element={<ComplaintDetails />} />
+    <Route path='/viewDetails' element={<ComplaintDetailsUser />} />
     <Route path='/admin-home' element={<AdminHome />} />
     <Route path='/admin-complaints' element={<AdminComplaints />} />
     <Route path='/admin-police-stations' element={<AdminPoliceStations />} />
