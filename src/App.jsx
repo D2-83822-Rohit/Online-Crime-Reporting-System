@@ -14,6 +14,7 @@ import MainNavBar from './Components/main_navbar';
 import AdminHome from './Pages/Admin-Pages/admin_home';
 import AdminComplaints from './Pages/Admin-Pages/admin_complaints';
 import AdminPoliceStations from './Pages/Admin-Pages/admin_police_stations';
+import UpdatePoliceStation from './Pages/Admin-Pages/update_police_station';
 import AdminPoliceOfficers from './Pages/Admin-Pages/admin_police_officers';
 import AdminInquires from './Pages/Admin-Pages/admin_inquries';
 import AddPoliceStation from './Components/Admin-Components/add_police_station';
@@ -43,6 +44,7 @@ function App() {
     <Route path='/admin-complaints' element={<AdminComplaints />} />
     <Route path='/admin-police-stations' element={<AdminPoliceStations />} />
     <Route path='/add-police-station' element={<AddPoliceStation />} />
+    <Route path="/update-police-station/:id" element={<UpdatePoliceStation />} />
     <Route path='/add-police-officer' element={<AddPoliceOfficer />} />
     <Route path='/admin-police-officers' element={<AdminPoliceOfficers />} />
     <Route path='/admin-users-inquires' element={<AdminInquires />} />

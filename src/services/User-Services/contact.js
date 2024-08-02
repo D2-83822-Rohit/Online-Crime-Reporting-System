@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config'; 
 
-const API_URL = `${config.url}/contact`; 
+const API_URL = `${config.url}/api/contactinfo`; 
 
 // Post contact information
 export const postContactInformation = async (contactInfo) => {
