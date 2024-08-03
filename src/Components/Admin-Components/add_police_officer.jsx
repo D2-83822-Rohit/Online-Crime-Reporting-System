@@ -3,17 +3,21 @@ import Footer from '../User-Components/footer';
 import AdminNavBar from './admin_navbar';
 import Form from 'react-bootstrap/Form';
 import { registerPoliceOfficer } from '../../services/Admin-Services/police_officer'; // Adjust the path as needed
-import {  fetchPoliceStations } from '../../services/Admin-Services/police_station'; // Adjust the path as needed
-import { toast } from 'react-toastify';
+import { fetchPoliceStations } from '../../services/Admin-Services/police_station'; // Adjust the path as needed
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const AddPoliceOfficer = () => {
     const [officerName, setOfficerName] = useState('');
     const [designation, setDesignation] = useState('');
     const [contactNumber, setContactNumber] = useState('');
-    const [policeStation, setPoliceStation] = useState('');
-    const [image, setImage] = useState(null);
+    const [email, setEmail] = useState('');
+    const [policeStationId, setPoliceStationId] = useState('');
+    // const [image, setImage] = useState(null);
     const [policeStations, setPoliceStations] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchStations = async () => {
@@ -26,6 +30,7 @@ const AddPoliceOfficer = () => {
         };
 
         fetchStations();
+        
     }, []);
 
     const validateForm = () => {
@@ -34,7 +39,7 @@ const AddPoliceOfficer = () => {
             return false;
         }
         if (designation.length === 0) {
-            toast.warning('Enter Designation');
+            toast.warning('Select Designation');
             return false;
         }
         if (contactNumber.length === 0) {
@@ -45,38 +50,51 @@ const AddPoliceOfficer = () => {
             toast.warning('Please enter a valid 10-digit contact number');
             return false;
         }
-        if (policeStation.length === 0) {
+        if (email.length === 0) {
+            toast.warning('Enter Email');
+            return false;
+        }
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            toast.warning('Enter a valid email address');
+            return false;
+        }
+        if (policeStationId.length === 0) {
             toast.warning('Select Police Station');
             return false;
         }
-        if (!image) {
-            toast.warning('Upload Image of Police Officer');
-            return false;
-        }
+        // if (!image) {
+        //     toast.warning('Upload Image of Police Officer');
+        //     return false;
+        // }
         return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validateForm()) {
             return;
         }
-
-        const formData = new FormData();
-        formData.append('officerName', officerName);
-        formData.append('designation', designation);
-        formData.append('contactNumber', contactNumber);
-        formData.append('policeStation', policeStation);
-        formData.append('image', image);
-
+    
+        const officerData = {
+            officerName,
+            designation,
+            contactNumber,
+            email,
+            policeStationId
+        };
+    
         try {
-            const data = await registerPoliceOfficer(formData);
+            const data = await registerPoliceOfficer(officerData);
             console.log(data);
+            toast.success('Police officer registered successfully');
+            navigate('/admin-police-officers');
         } catch (error) {
             console.error('Error submitting form:', error);
+            toast.error('Failed to register police officer');
         }
     };
+    
 
     return (
         <div>
@@ -105,15 +123,20 @@ const AddPoliceOfficer = () => {
                                                 <label htmlFor="floatingInput">Officer Name</label>
                                             </div>
                                             <div className="form-floating mb-3">
-                                                <input 
-                                                    type="text" 
-                                                    className="form-control" 
-                                                    id="floatingInput" 
-                                                    placeholder="Designation" 
-                                                    value={designation}
-                                                    onChange={(e) => setDesignation(e.target.value)}
-                                                />
-                                                <label htmlFor="floatingInput">Designation</label>
+                                                <Form.Group controlId="formDesignation">
+                                                {/* <Form.Label>Designation</Form.Label> */}
+                                                    <Form.Select 
+                                                        className="form-control"
+                                                        value={designation}
+                                                        onChange={(e) => setDesignation(e.target.value)}
+                                                    >
+                                                        <option value="">Select Designation</option>
+                                                        <option value="HEAD">HEAD</option>
+                                                        <option value="INSPECTOR">INSPECTOR</option>
+                                                        <option value="CONSTABLE">CONSTABLE</option>
+                                                    </Form.Select>
+                                                    
+                                                </Form.Group>
                                             </div>
                                             <div className="form-floating mb-3">
                                                 <input 
@@ -127,17 +150,29 @@ const AddPoliceOfficer = () => {
                                                 <label htmlFor="floatingInput">Contact Number</label>
                                             </div>
                                             <div className="form-floating mb-3">
+                                                <input 
+                                                    type="email" 
+                                                    className="form-control" 
+                                                    id="floatingInput" 
+                                                    placeholder="Email" 
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                />
+                                                <label htmlFor="floatingInput">Email</label>
+                                            </div>
+                                            <div className="form-floating mb-3">
                                                 <Form.Group controlId="formPoliceStation">
                                                     <Form.Select 
                                                         className="form-control"
-                                                        value={policeStation}
-                                                        onChange={(e) => setPoliceStation(e.target.value)}
+                                                        value={policeStationId}
+                                                        onChange={(e) => setPoliceStationId(e.target.value)}
                                                     >
                                                         <option value="">Select Police Station</option>
                                                         {policeStations.map((station) => (
-                                                            <option key={station.id} value={station.id}>{station.name}</option>
+                                                            <option key={station.id} value={station.id}>{station.stationName}</option>
                                                         ))}
                                                     </Form.Select>
+                                                    <Form.Label>Police Station</Form.Label>
                                                 </Form.Group>
                                             </div>
                                             <div className="form-floating mb-3">
@@ -150,13 +185,13 @@ const AddPoliceOfficer = () => {
                                                             id="floatingInput" 
                                                             placeholder="Upload Image of Police Officer" 
                                                         />
-                                                        <Form.Group controlId="formFile">
+                                                        {/* <Form.Group controlId="formFile">
                                                             <Form.Control 
                                                                 type="file" 
                                                                 placeholder="Image of Police Officer"
                                                                 onChange={(e) => setImage(e.target.files[0])}
                                                             />
-                                                        </Form.Group>
+                                                        </Form.Group> */}
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,7 +199,6 @@ const AddPoliceOfficer = () => {
                                                 <button className="btn btn-primary btn-login text-uppercase fw-bold" type="submit">ADD OFFICER</button>
                                             </div>
                                         </form>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -172,6 +206,10 @@ const AddPoliceOfficer = () => {
                     </div>
                 </section>
             </div>
+
+ 
+
+            <ToastContainer />
             <Footer />
         </div>
     );

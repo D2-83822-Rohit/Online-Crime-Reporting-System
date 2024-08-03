@@ -1,14 +1,14 @@
 import axios from 'axios';
-
-const API_ENDPOINT = 'YOUR_API_ENDPOINT';
+import config from '../../config';
+const API_ENDPOINT = `${config.url}/api/police-officers`;
 
 // Function to register a police officer
-export const registerPoliceOfficer = async (formData) => {
+export const registerPoliceOfficer = async (officerData) => {
     try {
-        const response = await axios.post(`${API_ENDPOINT}/register-officer`, formData, {
+        const response = await axios.post(`${API_ENDPOINT}/register-officer`, officerData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+                'Content-Type': 'application/json'
+            }
         });
         return response.data;
     } catch (error) {
@@ -20,7 +20,7 @@ export const registerPoliceOfficer = async (formData) => {
 // Function to fetch the list of police officers
 export const fetchPoliceOfficers = async () => {
     try {
-        const response = await axios.get(`${API_ENDPOINT}/police-officers`);
+        const response = await axios.get(`${API_ENDPOINT}/`);
         return response.data;
     } catch (error) {
         console.error('Error fetching police officers:', error);
@@ -31,7 +31,7 @@ export const fetchPoliceOfficers = async () => {
 // Function to delete a police officer
 export const deletePoliceOfficer = async (officerId) => {
     try {
-        await axios.delete(`${API_ENDPOINT}/police-officers/${officerId}`);
+        await axios.delete(`${API_ENDPOINT}/${officerId}`);
     } catch (error) {
         console.error('Error deleting police officer:', error);
         throw error;
@@ -39,12 +39,12 @@ export const deletePoliceOfficer = async (officerId) => {
 };
 
 // Function to update a police officer
-export const updatePoliceOfficer = async (officerId, formData) => {
+export const updatePoliceOfficer = async (officerId, officerData) => {
     try {
-        const response = await axios.put(`${API_ENDPOINT}/police-officers/${officerId}`, formData, {
+        const response = await axios.put(`${API_ENDPOINT}/${officerId}`, officerData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+                'Content-Type': 'application/json'
+            }
         });
         return response.data;
     } catch (error) {

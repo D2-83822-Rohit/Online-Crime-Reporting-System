@@ -3,7 +3,7 @@ import AdminNavBar from "../../Components/Admin-Components/admin_navbar";
 import Footer from "../../Components/User-Components/footer";
 import policeImage from '../../Images/Officers.jpeg';
 import { Link } from 'react-router-dom';
-import { fetchPoliceOfficers, deletePoliceOfficer } from '../../services/Admin-Services/police_officer'; // Adjust the path as needed
+import { fetchPoliceOfficers, deletePoliceOfficer, updatePoliceOfficer } from '../../services/Admin-Services/police_officer';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Modal, Form } from 'react-bootstrap';
@@ -12,6 +12,7 @@ const AdminPoliceOfficers = () => {
     const [officers, setOfficers] = useState([]);
     const [selectedOfficer, setSelectedOfficer] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
 
     useEffect(() => {
         const loadOfficers = async () => {
@@ -26,6 +27,16 @@ const AdminPoliceOfficers = () => {
 
         loadOfficers();
     }, []);
+
+    const loadOfficers = async () => {
+        try {
+            const data = await fetchPoliceOfficers();
+            setOfficers(data);
+        } catch (error) {
+            console.error('Error fetching police officers:', error);
+            toast.error('Failed to fetch police officers');
+        }
+    };
 
     const handleDelete = async (officerId) => {
         try {
@@ -45,9 +56,24 @@ const AdminPoliceOfficers = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-        // Implement the update functionality here
-        setShowEditModal(false);
-        toast.success('Officer updated successfully');
+        try {
+            await updatePoliceOfficer(selectedOfficer.id, selectedOfficer);
+            setShowEditModal(false);
+            await loadOfficers(); // Reload the officers list
+            toast.success('Officer updated successfully');
+        } catch (error) {
+            console.error('Error updating police officer:', error);
+            toast.error('Failed to update officer');
+        }
+    };
+
+    const handleShowDetails = (officer) => {
+        setSelectedOfficer(officer);
+        setShowDetailsModal(true);
+    };
+
+    const handleCloseDetailsModal = () => {
+        setShowDetailsModal(false);
     };
 
     return (
@@ -83,22 +109,32 @@ const AdminPoliceOfficers = () => {
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Designation</th>
-                                        <th>Image</th>
+                                        <th>Contact Number</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {officers.map((officer, index) => (
-                                        <tr key={officer.id}>
+                                        <tr key={officer.id} onClick={() => handleShowDetails(officer)}>
                                             <td>{index + 1}</td>
-                                            <td>{officer.name}</td>
+                                            <td>
+                                                <span
+                                                    style={{ cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
+                                                    onClick={() => handleShowDetails(officer)}
+                                                >
+                                                    {officer.officerName}
+                                                </span>
+                                            </td>
                                             <td>{officer.designation}</td>
-                                            <td><img src={officer.imageUrl} alt={officer.name} style={{ width: '50px', height: '50px' }} /></td>
+                                            <td>{officer.contactNumber}</td>
                                             <td>
                                                 <button
                                                     className="btn btn-outline-warning"
-                                                    onClick={() => handleEdit(officer)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleEdit(officer);
+                                                    }}
                                                 >
                                                     Edit
                                                 </button>
@@ -106,7 +142,10 @@ const AdminPoliceOfficers = () => {
                                             <td>
                                                 <button
                                                     className="btn btn-outline-danger"
-                                                    onClick={() => handleDelete(officer.id)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDelete(officer.id);
+                                                    }}
                                                 >
                                                     Delete
                                                 </button>
@@ -120,10 +159,33 @@ const AdminPoliceOfficers = () => {
                 </section>
             </div>
 
-            <Footer />
+            {/* Police Officer Details Modal */}
+            <Modal show={showDetailsModal} onHide={handleCloseDetailsModal} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Police Officer Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedOfficer && (
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">{selectedOfficer.officerName}</h5>
+                                <p><strong>Designation:</strong> {selectedOfficer.designation}</p>
+                                <p><strong>Contact Number:</strong> {selectedOfficer.contactNumber}</p>
+                                <p><strong>Email:</strong> {selectedOfficer.email}</p>
+                                <p><strong>Police Station:</strong> {selectedOfficer.policeStationName}</p>
+                            </div>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseDetailsModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
 
-            {/* Edit Officer Modal */}
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+            {/* Edit Police Officer Modal */}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Police Officer</Modal.Title>
                 </Modal.Header>
@@ -135,24 +197,38 @@ const AdminPoliceOfficers = () => {
                                 <Form.Control
                                     type="text"
                                     placeholder="Officer Name"
-                                    value={selectedOfficer.name}
-                                    onChange={(e) => setSelectedOfficer({ ...selectedOfficer, name: e.target.value })}
+                                    value={selectedOfficer.officerName}
+                                    onChange={(e) => setSelectedOfficer({ ...selectedOfficer, officerName: e.target.value })}
                                 />
                             </Form.Group>
                             <Form.Group controlId="formDesignation">
                                 <Form.Label>Designation</Form.Label>
                                 <Form.Control
-                                    type="text"
-                                    placeholder="Designation"
+                                    as="select"
                                     value={selectedOfficer.designation}
                                     onChange={(e) => setSelectedOfficer({ ...selectedOfficer, designation: e.target.value })}
+                                >
+                                    <option value="HEAD">HEAD</option>
+                                    <option value="INSPECTOR">INSPECTOR</option>
+                                    <option value="CONSTABLE">CONSTABLE</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group controlId="formContactNumber">
+                                <Form.Label>Contact Number</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Contact Number"
+                                    value={selectedOfficer.contactNumber}
+                                    onChange={(e) => setSelectedOfficer({ ...selectedOfficer, contactNumber: e.target.value })}
                                 />
                             </Form.Group>
-                            <Form.Group controlId="formFile">
-                                <Form.Label>Image</Form.Label>
+                            <Form.Group controlId="formEmail">
+                                <Form.Label>Email</Form.Label>
                                 <Form.Control
-                                    type="file"
-                                    onChange={(e) => setSelectedOfficer({ ...selectedOfficer, image: e.target.files[0] })}
+                                    type="email"
+                                    placeholder="Email"
+                                    value={selectedOfficer.email}
+                                    onChange={(e) => setSelectedOfficer({ ...selectedOfficer, email: e.target.value })}
                                 />
                             </Form.Group>
                             <Button variant="primary" type="submit">
@@ -164,6 +240,7 @@ const AdminPoliceOfficers = () => {
             </Modal>
 
             <ToastContainer />
+            <Footer />
         </>
     );
 };
