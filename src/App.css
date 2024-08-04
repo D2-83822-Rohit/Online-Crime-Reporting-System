@@ -49,6 +49,24 @@
   background-color: green;
 }
 
+.blinking-warning {
+  color: red;
+  font-weight: bold;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+      visibility: hidden;
+  }
+}
+
+@-webkit-keyframes blink-animation {
+  to {
+      visibility: hidden;
+  }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

@@ -1,37 +1,44 @@
 import axios from 'axios'
 import config from '../../config'
 
-export async function register(name,adharCardNumber, email, phone, addressLine1, addressLine2 ,state, city, pincode, password) {
-  // body parameters
-  const body = {
-    name,
-    adharCardNumber, 
-    email, 
-    phone, 
-    addressLine1, 
-    addressLine2 ,
-    state, 
-    city, 
-    pincode, 
-    password
+const API_ENDPOINT = `${config.url}/api/user`;
+
+/**
+ * Registers a new user.
+ * 
+ * @param {Object} userDTO - The user data to be sent to the server.
+ * @returns {Promise<Object>} - The response from the server.
+ */
+export const register = async (userDTO) => {
+  try {
+    const response = await axios.post(`${API_ENDPOINT}/register`, userDTO, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error registering user:', error);
+    throw error; // Rethrow the error to be handled by the caller
   }
-  // make API call
-  const response = await axios.post(`${config.url}/user/register`, body)
+};
 
-  // read JSON data (response)
-  return response.data
-}
-
-export async function login(email, password) {
-  // body parameters
-  const body = {
-    email,
-    password,
+/**
+ * Logs in a user.
+ * 
+ * @param {Object} loginDTO - The login data to be sent to the server.
+ * @returns {Promise<Object>} - The response from the server.
+ */
+export const login = async (loginDTO) => {
+  try {
+    const response = await axios.post(`${API_ENDPOINT}/login`, loginDTO, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    throw error; // Rethrow the error to be handled by the caller
   }
-
-  // make API call
-  const response = await axios.post(`${config.url}/user/login`, body)
-
-  // read JSON data (response)
-  return response.data
-}
+};

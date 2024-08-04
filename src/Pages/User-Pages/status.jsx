@@ -2,19 +2,36 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../Components/User-Components/navbar';
 import track from '../../Images/track.jpg';
 import Footer from '../../Components/User-Components/footer';
-import { Link } from 'react-router-dom';
 import { getComplaints } from '../../services/User-Services/complaint';
+import { fetchPoliceOfficers, fetchPoliceStationById } from '../../services/User-Services/fetch-data';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 function Status() {
     const [complaints, setComplaints] = useState([]);
-    const userId = localStorage.getItem('userId'); 
+    const [show, setShow] = useState(false);
+    const [selectedComplaint, setSelectedComplaint] = useState(null);
+    const [policeStationName, setPoliceStationName] = useState('');
+    const [policeOfficerName, setPoliceOfficerName] = useState('');
+    const userId = sessionStorage.getItem('id'); 
 
     useEffect(() => {
         const fetchComplaints = async () => {
             if (userId) {
                 try {
                     const data = await getComplaints(userId);
-                    setComplaints(data);
+                    const complaintsWithDetails = await Promise.all(
+                        data.data.map(async (complaint) => {
+                            const policeStation = await fetchPoliceStationById(complaint.assignedPoliceStationId);
+                            const policeOfficer = await fetchPoliceOfficers(complaint.assignedPoliceOfficerId);
+                            return {
+                                ...complaint,
+                                policeStationName: policeStation.stationName,
+                                policeOfficerName: policeOfficer.officerName,
+                            };
+                        })
+                    );
+                    setComplaints(complaintsWithDetails);
                 } catch (error) {
                     console.error('Error fetching complaints:', error);
                 }
@@ -23,6 +40,15 @@ function Status() {
 
         fetchComplaints();
     }, [userId]);
+
+    const handleShow = (complaint) => {
+        setSelectedComplaint(complaint);
+        setPoliceStationName(complaint.policeStationName);
+        setPoliceOfficerName(complaint.policeOfficerName);
+        setShow(true);
+    };
+
+    const handleClose = () => setShow(false);
 
     return (
         <>
@@ -52,7 +78,8 @@ function Status() {
                                         <th>Complaint Title</th>
                                         <th>Complaint Category</th>
                                         <th>Status</th>
-                                        <th>Assigned To</th>
+                                        <th>Assigned Police Station</th>
+                                        <th>Assigned Police Officer</th>
                                         <th>Details</th>
                                     </tr>
                                 </thead>
@@ -61,13 +88,18 @@ function Status() {
                                         <tr key={complaint.id}>
                                             <td>{index + 1}</td>
                                             <td>{complaint.title}</td>
-                                            <td>{complaint.category}</td>
-                                            <td>{complaint.status}</td>
-                                            <td>{complaint.assignedTo}</td>
+                                            <td>{complaint.complaintType}</td>
+                                            <td>{complaint.statusName}</td>
+                                            <td>{complaint.policeStationName}</td>
+                                            <td>{complaint.policeOfficerName}</td>
                                             <td>
-                                                <Link to={`/viewDetails/${complaint.id}`}>
-                                                    <button className="btn btn-outline-primary">View</button>
-                                                </Link>
+                                                <Button 
+                                                    variant="outline-primary" 
+                                                    onClick={() => handleShow(complaint)}
+                                                    style={{ color: 'black', textDecoration: 'none' }}
+                                                >
+                                                    <b>VIEW DETAILS</b>
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))}
@@ -78,6 +110,32 @@ function Status() {
                 </section>
             </div>
             <Footer />
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Complaint Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedComplaint && (
+                        <div>
+                            <p><strong>Title:</strong> {selectedComplaint.title}</p>
+                            <p><strong>Category:</strong> {selectedComplaint.complaintType}</p>
+                            <p><strong>Description:</strong> {selectedComplaint.complaintDescription}</p>
+                            <p><strong>Status:</strong> {selectedComplaint.statusName}</p>
+                            <p><strong>Crime Date:</strong> {selectedComplaint.crimeDate}</p>
+                            <p><strong>Suspect Name:</strong> {selectedComplaint.suspectName}</p>
+                            <p><strong>Suspect Address:</strong> {selectedComplaint.suspectAddress}</p>
+                            <p><strong>Police Station:</strong> {policeStationName}</p>
+                            <p><strong>Police Officer:</strong> {policeOfficerName}</p>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
