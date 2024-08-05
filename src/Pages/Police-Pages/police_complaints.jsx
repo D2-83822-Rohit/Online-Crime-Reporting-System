@@ -5,7 +5,7 @@ import { useState } from 'react';
 import StatusComponent from '../../Components/Police-Components/status_components';
 import RenderComponent from '../../Components/Police-Components/render_complaint_component';
 const button = [
-    'All', 'Asigned', 'Pending'
+    'Complaints', 'Assign Officer', 'Change Status'
 ]
 
 const PoliceComplaints = () => {

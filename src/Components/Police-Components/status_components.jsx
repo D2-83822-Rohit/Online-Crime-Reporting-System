@@ -5,7 +5,7 @@ function StatusComponent({buttons, isSelected, setIsSelected}) {
   return (
     <div>
       
-            <div className="row mb-3">
+            <div className="row mt-5">
             
             {
                 buttons.map((text, index)=>{

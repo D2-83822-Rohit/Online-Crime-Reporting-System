@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import AdminNavBar from "../../Components/Admin-Components/admin_navbar";
 import Footer from "../../Components/User-Components/footer";
 import policeImage from '../../Images/Officers.jpeg';
+import constableImage from '../../Images/constable.jpg';
+import inspectorImage from '../../Images/inspector.jpg';
+import headImage from '../../Images/head.jpg';
 import { Link } from 'react-router-dom';
 import { fetchPoliceOfficers, deletePoliceOfficer, updatePoliceOfficer } from '../../services/Admin-Services/police_officer';
 import { toast, ToastContainer } from 'react-toastify';
@@ -76,6 +79,20 @@ const AdminPoliceOfficers = () => {
         setShowDetailsModal(false);
     };
 
+    // Function to get image URL based on designation
+    const getImageByDesignation = (designation) => {
+        switch (designation) {
+            case 'CONSTABLE':
+                return constableImage;
+            case 'INSPECTOR':
+                return inspectorImage;
+            case 'HEAD':
+                return headImage;
+            default:
+                return policeImage;
+        }
+    };
+
     return (
         <>
             <AdminNavBar />
@@ -107,6 +124,7 @@ const AdminPoliceOfficers = () => {
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Image</th>
                                         <th>Name</th>
                                         <th>Designation</th>
                                         <th>Contact Number</th>
@@ -118,6 +136,13 @@ const AdminPoliceOfficers = () => {
                                     {officers.map((officer, index) => (
                                         <tr key={officer.id} onClick={() => handleShowDetails(officer)}>
                                             <td>{index + 1}</td>
+                                            <td>
+                                                <img
+                                                    src={getImageByDesignation(officer.designation)}
+                                                    alt={officer.designation}
+                                                    style={{ width: '100px', height: '100px', objectFit: 'contain' }}
+                                                />
+                                            </td>
                                             <td>
                                                 <span
                                                     style={{ cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
@@ -168,6 +193,11 @@ const AdminPoliceOfficers = () => {
                     {selectedOfficer && (
                         <div className="card">
                             <div className="card-body">
+                                <img
+                                    src={getImageByDesignation(selectedOfficer.designation)}
+                                    alt={selectedOfficer.designation}
+                                    style={{ width: '150px', height: '150px', objectFit: 'contain', display: 'block', margin: '0 auto' }}
+                                />
                                 <h5 className="card-title">{selectedOfficer.officerName}</h5>
                                 <p><strong>Designation:</strong> {selectedOfficer.designation}</p>
                                 <p><strong>Contact Number:</strong> {selectedOfficer.contactNumber}</p>

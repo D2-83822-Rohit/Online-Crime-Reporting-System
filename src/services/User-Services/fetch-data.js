@@ -12,6 +12,7 @@ export const fetchPoliceOfficers = async (id) => {
     }
 };
 
+
 export const fetchOfficersByStationId = async (stationId) => {
     try {
         const response = await axios.get(`${API_ENDPOINT}/police-officers/policeOfficersByStation/${stationId}`);

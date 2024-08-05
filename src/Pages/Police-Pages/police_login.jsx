@@ -16,6 +16,7 @@ function PoliceLogin() {
             if (data) {
               sessionStorage.setItem('policeOfficer', JSON.stringify(data));
               sessionStorage.setItem('officerId', JSON.stringify(data.id));
+              sessionStorage.setItem('policeStationId', JSON.stringify(data.policeStationId));
               sessionStorage.setItem('officerName', JSON.stringify(data.officerName));
                 toast.success('Login successful.');
                 navigate('/police-home'); 

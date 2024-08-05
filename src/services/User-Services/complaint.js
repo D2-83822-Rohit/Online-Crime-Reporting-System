@@ -17,7 +17,7 @@ export const getAllComplaints = async () => {
 // Get all complaints for particular police station 
 export const getAllComplaintsOfPoliceStations = async (policeStationId) => {
     try {
-        const response = await axios.get(`${API_URL}/${policeStationId}`);
+        const response = await axios.get(`${API_URL}/policeStation/${policeStationId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching complaints:', error);
