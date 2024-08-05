@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import banner from '../../Images/3rdHome.jpg';
 
 const button = [
-    'All', 'Asigned', 'Pending'
+    'All', 'Assigned', 'Pending'
 ]
 
 function AdminComplaints(){

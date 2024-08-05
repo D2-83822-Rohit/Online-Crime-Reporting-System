@@ -2,8 +2,8 @@ import React from 'react'
 import PoliceNavBar from '../../Components/Police-Components/police_navbar'
 import Footer from '../../Components/User-Components/footer';
 import { useState } from 'react';
-import StatusComponent from '../../Components/Admin-Components/status_components';
-import RenderComponent from '../../Components/Admin-Components/render_complaint_component';
+import StatusComponent from '../../Components/Police-Components/status_components';
+import RenderComponent from '../../Components/Police-Components/render_complaint_component';
 const button = [
     'All', 'Asigned', 'Pending'
 ]
