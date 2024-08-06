@@ -8,7 +8,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
-import { toast } from "react-toastify";
+import { toast} from "react-toastify";
+import ProtectedRoute from '../../redux/protectedRoute';
 
 function History() {
     const [complaints, setComplaints] = useState([]);
@@ -122,6 +123,7 @@ function History() {
 
     return (
         <>
+        <ProtectedRoute>
             <NavBar />
             <div className="home-container">
                 <header className="home-header">
@@ -297,6 +299,7 @@ function History() {
         </Button>
     </Modal.Footer>
 </Modal>
+</ProtectedRoute>
  </>
     );
 }

@@ -7,9 +7,10 @@ import inspectorImage from '../../Images/inspector.jpg';
 import headImage from '../../Images/head.jpg';
 import { Link } from 'react-router-dom';
 import { fetchPoliceOfficers, deletePoliceOfficer, updatePoliceOfficer } from '../../services/Admin-Services/police_officer';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Modal, Form } from 'react-bootstrap';
+import AdminHomeProtection from './admin_Protection';
 
 const AdminPoliceOfficers = () => {
     const [officers, setOfficers] = useState([]);
@@ -95,6 +96,7 @@ const AdminPoliceOfficers = () => {
 
     return (
         <>
+        <AdminHomeProtection>
             <AdminNavBar />
 
             <div className="home-container">
@@ -269,7 +271,7 @@ const AdminPoliceOfficers = () => {
                 </Modal.Body>
             </Modal>
 
-            <ToastContainer />
+            </AdminHomeProtection>
             <Footer />
         </>
     );

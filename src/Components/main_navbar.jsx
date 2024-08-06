@@ -20,9 +20,9 @@ function MainNavBar(){
         </div> */}
         
         <div className="user-options">
-                <button onClick={() => setIsSelected(0)} className="user-login-btn">User Login</button>                
-                <button onClick={() => setIsSelected(1)} className="admin-login-btn">Admin Login</button>
-                <button onClick={() => setIsSelected(2)} className="head-login-btn">Police Login</button>
+                <button onClick={() => setIsSelected(0)} className="user-login-btn">User</button>                
+                <button onClick={() => setIsSelected(1)} className="admin-login-btn">Admin</button>
+                <button onClick={() => setIsSelected(2)} className="head-login-btn">Police</button>
         </div>
 
         <hr/>

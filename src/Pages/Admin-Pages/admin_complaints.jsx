@@ -5,6 +5,7 @@ import Footer from "../../Components/User-Components/footer";
 import RenderComponent from "../../Components/Admin-Components/render_complaint_component";
 import { Link } from "react-router-dom";
 import banner from '../../Images/3rdHome.jpg';
+import AdminHomeProtection from './admin_Protection';
 
 const button = [
     'All', 'Assigned', 'Pending'
@@ -14,7 +15,7 @@ function AdminComplaints(){
     const [isSelected, setIsSelected] = useState(0)
     return(
         <>
-
+    <AdminHomeProtection>
     <AdminNavBar/>
 
     <div className="home-container">
@@ -63,7 +64,7 @@ function AdminComplaints(){
     </div>
 
     <Footer/>
-
+    </AdminHomeProtection>           
     </>
     );
 }

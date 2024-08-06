@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import Footer from "../../Components/User-Components/footer";
 import Form from 'react-bootstrap/Form';
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import ProtectedRoute from "../../redux/protectedRoute";
 
 function Complaints() {
     const [title, setTitle] = useState('');
@@ -80,6 +81,7 @@ function Complaints() {
 
     return (
         <>
+        <ProtectedRoute>
             <NavBar />
             <div className="home-container">
                 <header className="home-header">
@@ -231,8 +233,8 @@ function Complaints() {
                     </div>
                 </section>
             </div>
-            <ToastContainer />
             <Footer />
+            </ProtectedRoute>
         </>
     );
 }

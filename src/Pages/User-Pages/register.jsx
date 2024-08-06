@@ -21,7 +21,7 @@ function RegisterUser() {
   const navigate = useNavigate()
 
   const onCancel = () => {
-    navigate('/')
+    navigate('/login/user')
   }
 
   const isValidEmail = () => {
@@ -250,7 +250,7 @@ function RegisterUser() {
                     <div className='row'>
                       <div className='col'>
                         <div className='mb-3'>
-                          Already have account ? <Link to='/login'>Login here</Link>
+                          Already have account ? <Link to='/login/user'>Login here</Link>
                         </div>
 
                         <button onClick={onRegister} className='btn btn-success'>

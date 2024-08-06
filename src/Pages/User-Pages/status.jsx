@@ -6,6 +6,7 @@ import { getComplaints } from '../../services/User-Services/complaint';
 import { fetchPoliceOfficers, fetchPoliceStationById } from '../../services/User-Services/fetch-data';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ProtectedRoute from '../../redux/protectedRoute';
 
 function Status() {
     const [complaints, setComplaints] = useState([]);
@@ -52,6 +53,7 @@ function Status() {
 
     return (
         <>
+        <ProtectedRoute>
             <NavBar />
             <div className="home-container">
                 <header className="home-header">
@@ -90,8 +92,8 @@ function Status() {
                                             <td>{complaint.title}</td>
                                             <td>{complaint.complaintType}</td>
                                             <td>{complaint.statusName}</td>
-                                            <td>{complaint.policeStationName}</td>
-                                            <td>{complaint.policeOfficerName}</td>
+                                            <td>{complaint.policeStationName === 'Head Quarters' ? 'Not Assigned' : complaint.policeStationName}</td>
+                                            <td>{complaint.policeOfficerName === 'Admin' ? 'Not Assigned' : complaint.policeOfficerName}</td>
                                             <td>
                                                 <Button 
                                                     variant="outline-primary" 
@@ -125,8 +127,8 @@ function Status() {
                             <p><strong>Crime Date:</strong> {selectedComplaint.crimeDate}</p>
                             <p><strong>Suspect Name:</strong> {selectedComplaint.suspectName}</p>
                             <p><strong>Suspect Address:</strong> {selectedComplaint.suspectAddress}</p>
-                            <p><strong>Police Station:</strong> {policeStationName}</p>
-                            <p><strong>Police Officer:</strong> {policeOfficerName}</p>
+                            <p><strong>Police Station:</strong> {policeStationName === 'Head Quarters' ? 'Not Assigned' : policeStationName}</p>
+                            <p><strong>Police Officer:</strong> {policeOfficerName === 'Admin' ? 'Not Assigned' : policeOfficerName}</p>
                         </div>
                     )}
                 </Modal.Body>
@@ -136,6 +138,7 @@ function Status() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+        </ProtectedRoute>
         </>
     );
 }

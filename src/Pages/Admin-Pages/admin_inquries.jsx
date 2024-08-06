@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AdminNavBar from "../../Components/Admin-Components/admin_navbar";
 import Footer from "../../Components/User-Components/footer";
 import { getAllContactInformation } from '../../services/User-Services/contact'; 
+import AdminHomeProtection from './admin_Protection';
 
 function AdminInquires() {
     const [contactInfos, setContactInfos] = useState([]);
@@ -21,6 +22,7 @@ function AdminInquires() {
 
     return (
         <>
+        <AdminHomeProtection>
             <AdminNavBar />
 
             <div className="home-container">
@@ -69,6 +71,7 @@ function AdminInquires() {
             </div>
 
             <Footer />
+            </AdminHomeProtection>
         </>
     );
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import PoliceNavBar from '../../Components/Police-Components/police_navbar';
 import Footer from '../../Components/User-Components/footer';
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { postContactInformation } from '../../services/User-Services/contact'
 
 const PoliceInquires = () => {
@@ -134,7 +134,7 @@ const PoliceInquires = () => {
     </div>
 
       <Footer/>
-      <ToastContainer/>
+
     </div>
   )
 }
