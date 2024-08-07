@@ -3,7 +3,7 @@ import AdminNavBar from "../../Components/Admin-Components/admin_navbar";
 import Footer from "../../Components/User-Components/footer";
 import { Link } from 'react-router-dom';
 import { fetchPoliceStations, deletePoliceStation, updatePoliceStation } from '../../services/Admin-Services/police_station'; // Adjust the path as needed
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button, Modal, Form } from 'react-bootstrap';
 import PoliceStationBanner from '../../Images/policeBanner.jpg';
@@ -315,7 +315,6 @@ const AdminPoliceStations = () => {
                     </Modal.Footer>
                 </Modal>
 
-                <ToastContainer />
             </AdminHomeProtection>
         </>
     );

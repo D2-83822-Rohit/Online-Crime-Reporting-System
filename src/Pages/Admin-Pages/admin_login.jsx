@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginAdmin } from '../../services/Admin-Services/admin'; 
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import NavBar from '../../Components/User-Components/navbar';
 import image from '../../Images/laptop1.jpeg';
 
