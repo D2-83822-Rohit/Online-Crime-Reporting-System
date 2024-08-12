@@ -173,6 +173,7 @@ const AdminPoliceOfficers = () => {
                                                         e.stopPropagation();
                                                         handleDelete(officer.id);
                                                     }}
+                                                    disabled={true}
                                                 >
                                                     Delete
                                                 </button>

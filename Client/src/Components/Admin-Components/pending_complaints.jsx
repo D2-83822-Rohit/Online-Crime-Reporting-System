@@ -83,7 +83,7 @@ const PendingComplaints = () => {
             toast.error('Error assigning police station.');
         }
     };
-
+    // eslint-disable-next-line
     const handleAssignOfficer = async (complaint) => {
         try {
             console.log('Selected Police Officer ID:', selectedPoliceOfficerId);
@@ -121,7 +121,7 @@ const PendingComplaints = () => {
                                 <th>Location</th>
                                 <th>Status</th>
                                 <th>Assign Police Station</th>
-                                <th>Assign Police Officer</th>
+                                {/* <th>Assign Police Officer</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -145,7 +145,7 @@ const PendingComplaints = () => {
                                             Assign
                                         </Button>
                                     </td>
-                                    <td>
+                                    {/* <td>
                                         <select onChange={(e) => setSelectedPoliceOfficerId(e.target.value)} disabled={complaint.statusName !== 'assigned'}>
                                             <option value="">Select Police Officer</option>
                                             {policeOfficers.map(officer => (
@@ -155,7 +155,7 @@ const PendingComplaints = () => {
                                         <Button variant="outline-success" onClick={() => handleAssignOfficer(complaint)} disabled={!selectedPoliceOfficerId || complaint.statusName !== 'assigned'}>
                                             Assign
                                         </Button>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>

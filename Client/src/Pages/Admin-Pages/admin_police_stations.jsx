@@ -164,6 +164,7 @@ const AdminPoliceStations = () => {
                                                 <Button
                                                     variant="outline-danger"
                                                     onClick={() => handleDelete(station.id)}
+                                                    disabled={true}
                                                 >
                                                     Delete
                                                 </Button>
